@@ -38,6 +38,7 @@ export const webSocketSlice = createSlice({
         setStompClient: (state, action : PayloadAction<Stomp.Client>) => {
             state.stompClient = action.payload;
         }
+        
     },
 });
 

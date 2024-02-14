@@ -5,6 +5,7 @@ import SockJS from "sockjs-client/dist/sockjs";
 import {useAppDispatch, useAppSelector} from "../store/hooks.ts";
 import {setIsConnected, appendMessage,setStompClient} from "../store/Slices/webSocketSlice.ts";
 import {selectWebSocket} from "../store/Slices/webSocketSlice.ts";
+import { setNumUser } from "../store/Slices/numUserSlice.ts";
 
 function useWebSocket(){
     const dispatch = useAppDispatch()
@@ -17,6 +18,7 @@ function useWebSocket(){
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             stompClient.connect({}, () =>onConnected(stompClient,username), onError);
+
         } catch (e) {
             console.log(e);
         }
@@ -33,15 +35,22 @@ function useWebSocket(){
             webSocket.stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
         }
     }
+    
 
     const onConnected = (stompClient : Stomp.Client, username : string) => {
         stompClient.subscribe('/topic/public', onMessageReceived);
+        stompClient.subscribe('/topic/numUser', onNumUserReceived);
         stompClient.send("/app/chat.addUser", {}, JSON.stringify({ sender: username, type: 'JOIN', timestamp: new Date().toLocaleTimeString() }));
         dispatch(setIsConnected(true))
         dispatch(setStompClient(stompClient))
     }
+
     const onMessageReceived = (payload : Stomp.Message) => {
         dispatch(appendMessage(JSON.parse(payload.body)))
+    }
+    
+    const onNumUserReceived = (payload : Stomp.Message) => {
+        dispatch(setNumUser(JSON.parse(payload.body)))
     }
     return {connect,sendMessage}
 }
