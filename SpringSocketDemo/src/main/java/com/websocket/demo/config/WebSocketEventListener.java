@@ -25,8 +25,8 @@ public class WebSocketEventListener {
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) headerAccessor.getSessionAttributes().get("username");
-        ChatMessage.SetCount(-1);
         int CountUser ;
+        ChatMessage.SetCount(-1);
         CountUser = ChatMessage.getCount();
         if (username != null) {
             var chatMessage = ChatMessage.builder()
