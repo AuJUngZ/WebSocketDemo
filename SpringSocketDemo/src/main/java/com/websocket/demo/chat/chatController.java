@@ -8,12 +8,12 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class chatController {
 
+
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(ChatMessage chatMessage) {
         return chatMessage;
     }
-
 
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
