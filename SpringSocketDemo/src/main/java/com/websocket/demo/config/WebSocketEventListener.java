@@ -16,11 +16,15 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+
+//        System.out.println(ChatMessage.getUserreal());
+        int update = ChatMessage.removecount();
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if (username != null) {
             var chatMessage = ChatMessage.builder()
                     .type(MessageType.LEAVE)
+                    .userreal(update)
                     .sender(username)
                     .build();
 
